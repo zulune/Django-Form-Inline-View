@@ -17,6 +17,7 @@ class AlbumCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AlbumCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'Create new album'
         if self.request.POST:
             context['track_formset'] = TrackFormSet(self.request.POST)
         else:
@@ -42,6 +43,7 @@ class AlbumUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(AlbumUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Album update'
         if self.request.POST:
             context['track_formset'] = TrackFormSet(self.request.POST, instance=self.object)
             context['track_formset'].full_clean()

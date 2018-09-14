@@ -1,26 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Album form</title>
-</head>
-<body>
-    <style>
-        .container {
-            border: 1px solid red;
-            margin: 10px;
-            padding: 20px;
-        }
-    </style>
+{% extends 'base.html' %}
+{% block title %}Album Form | {{ block.super }}{% endblock %}
+{% block content %}
     <div class="container">
-        <form action="" method="post">
-            {% csrf_token %}
-            <table>{{ form }}</table>
-            <table>{{ track_formset }}</table>
-            <input type="submit" value="Save">
-        </form>
+        <div class="row">
+            <div class="col-9">
+                <h1>{{ title }}</h1>
+                <form action="" method="post" class="form-horizontal">
+                    {% csrf_token %}
+                    <table class="table">{{ form }}</table>
+                    <table class="table">{{ track_formset }}</table>
+                    <input class="btn btn-primary" type="submit" value="Save">
+                </form>
+            </div>
+            <div class="col-3">
+                <h1>Actions</h1>
+                <ul class="list-group">
+                    <li class="list-group-item"><a class="btn btn-dark" href="{% url 'music:album_create' %}">Create new Album</a></li>
+                    <li class="list-group-item"><a class="btn btn-danger" href="">Delete</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+{% endblock %}
