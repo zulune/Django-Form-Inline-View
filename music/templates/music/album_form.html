@@ -7,18 +7,51 @@
                 <h1>{{ title }}</h1>
                 <form action="" method="post" class="form-horizontal">
                     {% csrf_token %}
-                    <table class="table">{{ form }}</table>
+                    <div id="render-from">
+                        <table class="table">{{ form }}</table>
+                    {% if track_formset.errors %}
+                        <div class="container alert alert-danger">
+                            {{ track_formset.errors }}
+                        </div>
+                    {% endif %}
                     <table class="table">{{ track_formset }}</table>
-                    <input class="btn btn-primary" type="submit" value="Save">
+                    </div>
+                    <div id="more_field">
+                        <button type="button" class="btn btn-success">+</button>
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Save" id="save">
                 </form>
             </div>
             <div class="col-3">
                 <h1>Actions</h1>
                 <ul class="list-group">
                     <li class="list-group-item"><a class="btn btn-dark" href="{% url 'music:album_create' %}">Create new Album</a></li>
-                    <li class="list-group-item"><a class="btn btn-danger" href="">Delete</a></li>
+                    {% if request.path == 'music:album_update' %}
+                    <li class="list-group-item"><a class="btn btn-danger" href="{% url 'music:album_delete' object.pk %}">Delete</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function() {
+            $('input').addClass('form-control');
+            $('#more_field button').click(function () {
+                const form = $('form');
+                $.ajax({
+                    url: form.attr('action'),
+                    method: form.attr('method'),
+                    data: form.serialize(),
+                    success: (data) => {
+                        console.log(data)
+                    },
+                    error: () => {
+                        console.log('Error')
+                    }
+                })
+            })
+        })
+    </script>
 {% endblock %}

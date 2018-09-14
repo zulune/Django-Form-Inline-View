@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, CreateView, UpdateView
+from django.http import JsonResponse
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+
+from music.utils import AjaxableResponseMixin
 
 from music.models import Album, Track
 from music.forms import TrackFormSet
@@ -10,7 +13,7 @@ class AlbumListView(ListView):
     model = Album
 
 
-class AlbumCreateView(CreateView):
+class AlbumCreateView(AjaxableResponseMixin, CreateView):
     model = Album
     success_url = reverse_lazy('music:album_list')
     fields = '__all__'
@@ -18,7 +21,7 @@ class AlbumCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(AlbumCreateView, self).get_context_data(**kwargs)
         context['title'] = 'Create new album'
-        if self.request.POST:
+        if self.request.POST and self.request.is_ajax():
             context['track_formset'] = TrackFormSet(self.request.POST)
         else:
             context['track_formset'] = TrackFormSet()
@@ -36,7 +39,7 @@ class AlbumCreateView(CreateView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
-class AlbumUpdateView(UpdateView):
+class AlbumUpdateView(AjaxableResponseMixin, UpdateView):
     model = Album
     success_url = reverse_lazy('music:album_list')
     fields = '__all__'
@@ -61,3 +64,8 @@ class AlbumUpdateView(UpdateView):
             return redirect(self.success_url)
         else:
             return self.render_to_response(self.get_context_data(form=form))
+
+
+class AlbumDeleteView(DeleteView):
+    model = Album
+    success_url = reverse_lazy('music:album_list')

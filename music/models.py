@@ -16,3 +16,6 @@ class Track(models.Model):
 
     def __str__(self):
         return "%s - %s" % (self.number, self.name)
+
+    class Meta:
+        unique_together = ('album', 'number', 'name', )
